@@ -1,0 +1,31 @@
+import numpy as np
+import matplotlib.pyplot as plt
+Fs = 100
+f0 = 5
+N = 100
+n = np.arange(N)
+x = np.sin(2 * np.pi * f0 * n / Fs)
+y = np.concatenate((x, np.zeros(50)))
+X = np.fft.fft(x)
+freq_x = np.fft.fftfreq(len(x), 1/Fs)
+Y = np.fft.fft(y)
+freq_y = np.fft.fftfreq(len(y), 1/Fs)
+X_shift = np.fft.fftshift(X)
+Y_shift = np.fft.fftshift(Y)
+freq_x_shift = np.fft.fftshift(freq_x)
+freq_y_shift = np.fft.fftshift(freq_y)
+plt.figure()
+plt.subplot(2, 1, 1)
+plt.plot(freq_x_shift, np.abs(X_shift))
+plt.xlabel("Frequency (Hz)")
+plt.ylabel("|X(f)|")
+plt.title("Spectrum of Original Signal x[n]")
+plt.grid()
+plt.subplot(2, 1, 2)
+plt.plot(freq_y_shift, np.abs(Y_shift))
+plt.xlabel("Frequency (Hz)")
+plt.ylabel("|Y(f)|")
+plt.title("Spectrum of Zero-Padded Signal y[n]")
+plt.grid()
+plt.tight_layout()
+plt.show()

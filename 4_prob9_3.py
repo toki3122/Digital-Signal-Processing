@@ -1,0 +1,22 @@
+import numpy as np
+import matplotlib.pyplot as plt
+w = np.linspace(-np.pi, np.pi, 1000)
+H = 1 / (1 - np.exp(-1j * w))
+magnitude = np.abs(H)
+phase = np.angle(H)
+magnitude[np.abs(w) < 0.001] = np.nan
+plt.figure()
+plt.subplot(2, 1, 1)
+plt.plot(w, magnitude)
+plt.xlabel("Frequency (rad/sample)")
+plt.ylabel("|H(e^jw)|")
+plt.title("Magnitude Response")
+plt.grid()
+plt.subplot(2, 1, 2)
+plt.plot(w, phase)
+plt.xlabel("Frequency (rad/sample)")
+plt.ylabel("Phase (radians)")
+plt.title("Phase Response")
+plt.grid()
+plt.tight_layout()
+plt.show()
