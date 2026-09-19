@@ -259,7 +259,7 @@ plt.xlabel("Frequency (Hz) ")
 plt.ylabel("Magnitude (dB)")
 plt.axvline(fl, color='red', linestyle='--', label=f'Lower cutoff ({fl} Hz)')
 plt.axvline(fu, color='purple', linestyle='--',label=f'Upper cutoff ({fu} Hz)')
-plt.axhline(-3, color='orange', linestyle='-.', label='-3 dB Mark')
+plt.axhline(-6, color='orange', linestyle='-.', label='-3 dB Mark')
 plt.grid()
 plt.legend()
 plt.subplot(2, 1, 2)
@@ -382,7 +382,6 @@ plt.axvline(fstop / 1000, color='r', linestyle='--')
 plt.axhline(-As, color='r', linestyle='--')
 plt.legend()
 plt.show()
-
 ##############
 #blt chebyshev
 ##############
