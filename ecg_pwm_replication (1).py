@@ -1,8 +1,8 @@
 """
-ECG compression: replication of Devindi et al. 2024 (Sci. Rep. 14:17162)
+ECG compression: replication of Devindi et al. 2024 (Scientific Reports) doi: https://doi.org/10.1038/s41598-024-68022-5
 Methods (all quantize 11-bit samples to `b` bits, stored codes are b bits):
-  plain (Lab 2 mid-tread)   Lab 2 quantizer + low-pass          <- manual baseline / ablation
-  paper Alg.1               floor quantizer + error accumulator <- the paper
+  plain (mid-tread quantizer) - mid tread quantizer + low-pass (Baseline for comparison)          
+  paper Alg.1               floor quantizer + error accumulator (the paper method)
   EF-1 round                1st-order error feedback with rounding
   EF-2 round                2nd-order noise shaping, TF=(1-z^-1)^2
   dither+plain              TPDF dither before rounding
@@ -33,7 +33,6 @@ RECORDS = ["100", "101", "102", "103", "104", "105", "106", "107", "108", "109",
 # all 48 official MIT-BIH arrhythmia records
 PACEMAKER_RECORDS = {"102", "104", "107", "217"}
 DURATION_S = 300          
-PAPER_DURATION_S = 300
 BITS_SWEEP = list(range(1, 11))   
 HIGHLIGHT_BITS = [2, 4, 6, 10]    
 RESAMPLE_RATES = [360, 180, 120]
@@ -567,20 +566,20 @@ if __name__ == "__main__":
     print(q.to_string(index=False))
     q.to_csv(f"{OUT_DIR}/table_qrs.csv", index=False)
 
-    print(f"\n=== paper's Fig. 5 reproduction: PRD & BCR vs bits, {PAPER_DURATION_S}s/record, "
+    print(f"\n=== paper's Fig. 5 reproduction: PRD & BCR vs bits, {DURATION_S}s/record, "
           f"paper Alg.1 only, rates {RESAMPLE_RATES} ===")
-    if PAPER_DURATION_S == DURATION_S:
+    if DURATION_S == DURATION_S:
         data_full, src_full = data, src        # avoid re-downloading the same thing twice
     else:
-        print(f"  loading full-length ({PAPER_DURATION_S}s) data for the paper-reproduction "
+        print(f"  loading full-length ({DURATION_S}s) data for the paper-reproduction "
               f"figures -- this is a second, separate download/load from the {DURATION_S}s set above")
-        data_full, src_full = get_data(PAPER_DURATION_S)
+        data_full, src_full = get_data(DURATION_S)
     resample_df = run_resample_sweep(data_full)
     resample_df.to_csv(f"{OUT_DIR}/table_prd_bcr_vs_bits.csv", index=False)
     print(resample_df.groupby(["rate", "bits"])[["PRD_raw", "BCR_vs16"]].mean().reset_index().to_string(index=False))
     fig_prd_bcr_vs_bits(resample_df)
 
-    print(f"\n=== paper's Fig. 6 reproduction: QRS SE/+P vs bits, {PAPER_DURATION_S}s/record, "
+    print(f"\n=== paper's Fig. 6 reproduction: QRS SE/+P vs bits, {DURATION_S}s/record, "
           f"paper Alg.1 only, rates {RESAMPLE_RATES} (this is the slow one) ===")
     qrsbits_df = run_qrs_vs_bits(data_full)
     qrsbits_df.to_csv(f"{OUT_DIR}/table_qrs_vs_bits.csv", index=False)
